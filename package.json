@@ -23,9 +23,6 @@
     "build": "",
     "test": "mocha \"./test/**/*.js\""
   },
-  "engines": {
-    "node": "0.10.x"
-  },
   "dependencies": {
     "debug": "~2.6.9",
     "express": "~4.16.1",
