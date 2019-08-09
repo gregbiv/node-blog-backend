@@ -6,7 +6,7 @@
 Node Blog is a simple app and an attempt to learn better Node.js
 
 #### Quick links
-- [API documentation](http://http://gregbiv-node-backend.heroku.com/api-docs)
+- [API documentation](http://gregbiv-node-backend.heroku.com/api-docs)
 - [Travis](https://travis-ci.org/gregbiv/node-blog-backend)
 
 ## Getting started
