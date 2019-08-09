@@ -12,6 +12,9 @@ module.exports = {
       title: 'Lorem ipsum',
       description: 'Dolorem sit amet',
       userId: userId,
+      tags: [
+          'lorem', 'ipsum', 'dolorem', 'sit', 'amet',
+      ],
       createdAt: new Date(),
       updatedAt: new Date(),
     }], {});
