@@ -8,8 +8,7 @@ module.exports = {
     operatorsAliases: false
   },
   production: {
-    dialect: process.env.DB_DIALECT,
-    operatorsAliases: false,
-    use_env_variable: "DATABASE_URL",
+    use_env_variable: 'DATABASE_URL',
+    dialect: 'postgres',
   }
 };
