@@ -1,3 +1,6 @@
+const mocha = require('mocha');
+const describe = mocha.describe;
+
 const {
     sequelize,
     dataTypes,
@@ -5,7 +8,7 @@ const {
     checkPropertyExists
 } = require('sequelize-test-helpers');
 
-const UserModel = require('../../../models/user');
+const UserModel = require('../../models/user');
 
 /**
  * Database Tests

@@ -1,5 +1,5 @@
 # Node-Blog
-[![travis](https://travis-ci.org/gregbiv/node-blog.svg?branch=master)](https://travis-ci.org/gregbiv/node-blog)
+[![travis](https://travis-ci.com/gregbiv/node-blog.svg?branch=master)](https://travis-ci.com/gregbiv/node-blog)
 [![Maintainability](https://api.codeclimate.com/v1/badges/23aab4eaf0a5e5308899/maintainability)](https://codeclimate.com/github/gregbiv/node-blog/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/23aab4eaf0a5e5308899/test_coverage)](https://codeclimate.com/github/gregbiv/node-blog/test_coverage)
 

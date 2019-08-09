@@ -10,13 +10,8 @@ services:
       - "80:8080"
     volumes:
       - .:/usr/src/app
-    environment:
-      PORT: 8080
-      DB_USERNAME: user
-      DB_PASSWORD: pass
-      DB_NAME: db
-      DB_HOST: postgres
-      DB_DIALECT: postgres
+    env_file:
+      - "./.env"
   postgres:
     image: postgres:9.5
     ports:
