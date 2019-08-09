@@ -11,7 +11,22 @@ const PostController = () => {
         tags: body.tags,
       });
 
-      return res.status(200).json({ msg: 'created'})
+      return res.status(201).json()
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ msg: 'Internal server error' });
+    }
+  };
+
+  const remove = async (req, res) => {
+    try {
+      await models.Post.destroy({
+        where: {
+          id: req.params.id
+        }
+      });
+
+      return res.status(202).json()
     } catch (err) {
       console.log(err);
       return res.status(500).json({ msg: 'Internal server error' });
@@ -32,6 +47,7 @@ const PostController = () => {
 
   return {
     create,
+    remove,
     getAll,
   };
 };
