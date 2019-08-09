@@ -1,5 +1,5 @@
-const mocha = require('mocha')
-const describe = mocha.describe
+const mocha = require('mocha');
+const describe = mocha.describe;
 
 const {
     sequelize,
@@ -8,23 +8,23 @@ const {
     checkPropertyExists
 } = require('sequelize-test-helpers');
 
-const UserModel = require('../../../models/role');
+const UserModel = require('../../models/post');
 
 /**
  * Database Tests
  */
 describe('Database', () => {
     // Check our db model table name
-    describe('models/Role - Table Name Check', () => {
+    describe('models/Post - Table Name Check', () => {
         const Comm = UserModel(sequelize, dataTypes);
-        checkModelName(Comm)('Role')
+        checkModelName(Comm)('Post')
     });
 
     // Check table properties
-    describe('models/Role - Properties Check', () => {
+    describe('models/User - Properties Check', () => {
         const Comm = UserModel(sequelize, dataTypes);
         const instance = new Comm()
-        ;['name'].forEach(
+        ;['title', 'description', 'userId', 'tags'].forEach(
             checkPropertyExists(instance)
         )
     })
