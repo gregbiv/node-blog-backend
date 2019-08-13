@@ -73,7 +73,7 @@ const PostController = () => {
         where: {}
       };
 
-      const { docs, pages, total } = await models.Post.paginate(options);
+      const { docs, total } = await models.Post.paginate(options);
 
       return res.status(200).json(new PostResponse(page, perPage, total, docs));
     } catch (err) {
