@@ -1,7 +1,21 @@
+const auth = require('../src/middlewares/auth');
+
 const Routes = {
-    'GET /posts': 'PostsController.getAll',
-    'POST /posts': 'PostsController.create',
-    'DELETE /posts/:id': 'PostsController.remove',
+    'POST /posts': {
+        path: 'PostController.create',
+        middlewares: [
+            auth,
+        ],
+    },
+
+    'POST /remove': {
+        path: 'PostController.remove',
+        middlewares: [
+            auth,
+        ],
+    },
+
+    'GET /posts': 'PostController.getAll',
 };
 
 module.exports = Routes;

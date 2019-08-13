@@ -3,6 +3,10 @@ const SwaggerOptions = {
         info: {
             title: 'Node.js blog backend',
             version: '0.0.1',
+            description: 'Node.js simple app',
+            contact: {
+                email: 'gregbiv@gmail.com',
+            },
         },
         host: 'localhost',
         basePath: '/',

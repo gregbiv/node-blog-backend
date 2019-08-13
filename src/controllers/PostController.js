@@ -1,21 +1,23 @@
 const models = require('../models');
+const PostResponse = require('../models/response/post');
 
 const PostController = () => {
   /**
    * Creates a Post
    * @route POST /posts
-   * @group private - Private endpoints
+   * @operationId createPost
+   * @group Post - Post endpoints
    * @param {Post.model} post.body.required - the new post
-   * @returns {object} 201 - Post successfully created
+   * @returns 201 - Post successfully created
    */
   const create = async (req, res) => {
-    const { body } = req;
+    const { title, description, tags } = req.body;
     try {
       await models.Post.create({
-        title: body.title,
-        description: body.description,
-        userId: body.userId,
-        tags: body.tags,
+        title: title,
+        description: description,
+        userId: 0, // TODO
+        tags: tags,
       });
 
       return res.status(201).json()
@@ -28,9 +30,10 @@ const PostController = () => {
   /**
    * Removes post by given ID
    * @route DELETE /posts/{id}
-   * @group private - Private endpoints
-   * @param {integer} id.path - id, eg:123
-   * @returns {object} 202 - Post successfully removed
+   * @operationId removePost
+   * @group Post - Post endpoints
+   * @param {integer} id.path.required - id, eg:123
+   * @returns 202 - Post successfully removed
    * @returns {Error}  500 - Unexpected error
    */
   const remove = async (req, res) => {
@@ -51,15 +54,28 @@ const PostController = () => {
   /**
    * Returns all available posts
    * @route GET /posts
-   * @group public - Public endpoints
-   * @returns {object} 200 - An array of user info
+   * @operationId getPost
+   * @group Post - Post endpoints
+   * @param {string} perPage.query - limit results per page
+   * @param {string} page.query - current page
+   * @param {string} order.query - order by
+   * @returns {PostResponse.model} 200 - An array of user info
    * @returns {Error}  500 - Unexpected error
    */
   const getAll = async (req, res) => {
     try {
-      const results = await models.Post.findAll();
+      const perPage = 25;
+      const page = 1;
+      const options = {
+        page: page,
+        paginate: perPage,
+        order: [['createdAt', 'DESC']],
+        where: {}
+      };
 
-      return res.status(200).json({ results });
+      const { docs, pages, total } = await models.Post.paginate(options);
+
+      return res.status(200).json(new PostResponse(page, perPage, total, docs));
     } catch (err) {
       console.log(err);
       return res.status(500).json({ msg: 'Internal server error' });
