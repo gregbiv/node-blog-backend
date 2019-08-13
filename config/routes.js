@@ -16,6 +16,8 @@ const Routes = {
     },
 
     'GET /posts': 'PostController.getAll',
+
+    'POST /user/register': 'UserController.register',
 };
 
 module.exports = Routes;

@@ -1,5 +1,5 @@
 const models = require('../models');
-const PostResponse = require('../models/response/post');
+const PostResponse = require('../response/post');
 
 const PostController = () => {
   /**
@@ -60,7 +60,7 @@ const PostController = () => {
    * @param {string} page.query - current page
    * @param {string} order.query - order by
    * @returns {PostResponse.model} 200 - An array of user info
-   * @returns {Error}  500 - Unexpected error
+   * @returns 500 - Unexpected error
    */
   const getAll = async (req, res) => {
     try {
