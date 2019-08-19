@@ -1,5 +1,7 @@
 const models = require('../models');
 const PostResponse = require('../response/post');
+const { ValidationError, ErrorResponse } = require('../response/error');
+const Sequelize = require('sequelize');
 
 const PostController = () => {
   /**
@@ -8,6 +10,7 @@ const PostController = () => {
    * @operationId createPost
    * @group Post - Post endpoints
    * @param {Post.model} post.body.required - the new post
+   * @returns {ErrorResponse.model} 400 - validation failed
    * @returns 201 - Post successfully created
    */
   const create = async (req, res) => {
@@ -22,6 +25,48 @@ const PostController = () => {
 
       return res.status(201).json()
     } catch (err) {
+        if (err instanceof Sequelize.ValidationError) {
+            const errors = err.errors.map(({ path, message }) => {
+                return new ValidationError(path, message);
+            });
+            return res.status(400).json(new ErrorResponse(errors));
+        }
+      console.log(err);
+      return res.status(500).json({ msg: 'Internal server error' });
+    }
+  };
+
+  /**
+   * Updates a Post
+   * @route PATCH /posts
+   * @operationId patchUpdate
+   * @group Post - Post endpoints
+   * @param {Post.model} post.body.required - the new post
+   * @returns {ErrorResponse.model} 400 - validation failed
+   * @returns {Post.model} 200 - Post successfully created
+   */
+  const update = async (req, res) => {
+    const { title, description, tags } = req.body;
+    try {
+      await models.Post.update({
+        title: title,
+        description: description,
+        tags: tags,
+      },{
+        where: {
+          id: req.params.id
+        },
+        returning: true,
+      }).then(function([rowsUpdate, [updatedPost]]) {
+        return res.status(200).json(updatedPost)
+      });
+    } catch (err) {
+      if (err instanceof Sequelize.ValidationError) {
+        const errors = err.errors.map(({ path, message }) => {
+          return new ValidationError(path, message);
+        });
+        return res.status(400).json(new ErrorResponse(errors));
+      }
       console.log(err);
       return res.status(500).json({ msg: 'Internal server error' });
     }
@@ -84,6 +129,7 @@ const PostController = () => {
 
   return {
     create,
+    update,
     remove,
     getAll,
   };

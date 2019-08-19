@@ -8,7 +8,14 @@ const Routes = {
         ],
     },
 
-    'POST /remove': {
+    'PATCH /posts/:id': {
+        path: 'PostController.update',
+        // middlewares: [
+        //     auth,
+        // ],
+    },
+
+    'DELETE /posts/:id': {
         path: 'PostController.remove',
         middlewares: [
             auth,
@@ -16,7 +23,7 @@ const Routes = {
     },
 
     'GET /posts': 'PostController.getAll',
-
+    'POST /user/login': 'UserController.login',
     'POST /user/register': 'UserController.register',
 };
 
