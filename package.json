@@ -21,8 +21,10 @@
     "start.dev": "nodemon -L --ignore 'test/*' --ignore 'features/*'",
     "lint": "eslint \"./**/*.js\"",
     "build": "",
-    "test": "mocha \"./test/**/*.js\"",
-    "test-integration": "cucumber-js"
+    "test-unit": "mocha \"./test/**/*.js\"",
+    "test-coverage": "istanbul cover node_modules/mocha/bin/_mocha ./test/**/*.js -- -R spec",
+    "test-integration": "cucumber-js",
+    "codeclimate-coverage": "codeclimate-test-reporter < ./coverage/lcov.info"
   },
   "dependencies": {
     "bcrypt": "^3.0.6",

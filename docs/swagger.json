@@ -175,11 +175,14 @@
           "User"
         ],
         "responses": {
-          "201": {
-            "description": "User successfully register"
+          "200": {
+            "description": "User successfully logged",
+            "schema": {
+              "$ref": "#/definitions/LoginResponse"
+            }
           },
-          "400": {
-            "description": "validation failed",
+          "401": {
+            "description": "password invalid",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -333,6 +336,17 @@
           "items": {
             "$ref": "#/definitions/Post"
           }
+        }
+      }
+    },
+    "LoginResponse": {
+      "required": [
+        "token"
+      ],
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": ""
         }
       }
     }

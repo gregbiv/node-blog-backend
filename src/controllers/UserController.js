@@ -1,5 +1,6 @@
 const models = require('../models');
 const { ValidationError, ErrorResponse } = require('../response/error');
+const LoginResponse = require('../response/token');
 const Sequelize = require('sequelize');
 const jwt = require('jsonwebtoken');
 const jwtSecret = process.env.JWT_SECRET;
@@ -12,16 +13,16 @@ const UserController = () => {
    * @group User - User endpoints
    * @param {User.model} post.body.required - the new user
    * @returns {ErrorResponse.model} 401 - password invalid
-   * @returns 200 - User successfully logged-in
+   * @returns {LoginResponse.model} 200 - User successfully logged-in
    */
   const login = async (req, res) => {
-    const loginError = new ValidationError('password', 'password is not valid');
+    const errors = [new ValidationError('password', 'password is not valid')];
     const {email, password} = req.body;
 
     try {
       const user = await models.User.findOne({where: {email: email}});
 
-      if (user.validPassword(password)) {
+      if (user && user.validPassword(password)) {
         const userData = {
           id: user.id,
           email: user.email,
@@ -30,9 +31,9 @@ const UserController = () => {
         };
 
         const jwtToken = jwt.sign(userData, jwtSecret, {expiresIn: 60 * 60});
-        return res.status(200).json({token: jwtToken});
+        return res.status(200).json(new LoginResponse(jwtToken));
       } else {
-        return res.status(401).json(new ErrorResponse(loginError));
+        return res.status(401).json(new ErrorResponse(errors));
 
       }
     } catch (err) {
