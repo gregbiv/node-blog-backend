@@ -19,7 +19,7 @@ const PostController = () => {
       await models.Post.create({
         title: title,
         description: description,
-        userId: 0, // TODO
+        userId: req.userData.id,
         tags: tags,
       });
 

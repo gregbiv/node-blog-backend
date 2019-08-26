@@ -1,4 +1,6 @@
 'use strict';
+const bcrypt = require('bcrypt');
+
 module.exports = (sequelize, DataTypes) => {
   /**
    * @typedef User
@@ -40,6 +42,19 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     roleId: DataTypes.INTEGER
-  }, {});
+  },
+  {
+    hooks: {
+      beforeCreate: (user) => {
+        const salt = bcrypt.genSaltSync();
+        user.password = bcrypt.hashSync(user.password, salt);
+      }
+    }
+  });
+
+  User.prototype.validPassword = function(password) {
+    return bcrypt.compareSync(password, this.password);
+  };
+
   return User;
 };

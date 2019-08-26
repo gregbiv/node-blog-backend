@@ -1,7 +1,6 @@
 const models = require('../models');
 const { ValidationError, ErrorResponse } = require('../response/error');
 const Sequelize = require('sequelize');
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const jwtSecret = process.env.JWT_SECRET;
 
@@ -17,30 +16,29 @@ const UserController = () => {
    */
   const login = async (req, res) => {
     const loginError = new ValidationError('password', 'password is not valid');
-    const {email, candidatePassword} = req.body;
+    const {email, password} = req.body;
 
-    const {err, isMatch} = await models.User.findOne({where: {email: email}})
-        .then(user => {
-          bcrypt.compare(candidatePassword, user.password, function (err, isMatch) {
-            console.log(err);
-            return {err, isMatch};
-          });
-        })
-        .catch(err => {
-          const isMatch = false;
-          return {err, isMatch}
-        });
+    try {
+      const user = await models.User.findOne({where: {email: email}});
 
-      if (err) {
-        console.log(err);
-        return res.status(500).json({ msg: 'Internal server error' });
-      }
-      if (isMatch) {
-        const jwtToken = jwt.sign({email:'test'}, jwtSecret, {expiresIn: 60 * 60});
+      if (user.validPassword(password)) {
+        const userData = {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          roleId: user.roleId,
+        };
+
+        const jwtToken = jwt.sign(userData, jwtSecret, {expiresIn: 60 * 60});
         return res.status(200).json({token: jwtToken});
-      }
+      } else {
+        return res.status(401).json(new ErrorResponse(loginError));
 
-    return res.status(500).json({ msg: 'Internal server error' });
+      }
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ msg: 'Internal server error' });
+    }
   };
 
   /**
@@ -55,12 +53,10 @@ const UserController = () => {
   const register = async (req, res) => {
     const {name, email, password} = req.body;
     try {
-      const hashedPassword = await bcrypt.hash(password, 10);
-
       await models.User.create({
         name: name,
         email: email,
-        password: hashedPassword,
+        password: password,
       });
 
       return res.status(201).json();
