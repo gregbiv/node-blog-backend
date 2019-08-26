@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
       validate: {
+        isAlpha: true,
         len: {
           args: 3,
           msg: "Name must be at least 3 characters in length"
@@ -24,10 +25,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
       validate: {
-        len: {
-          args: [6, 128],
-          msg: "Email address must be between 6 and 128 characters in length"
-        },
         isEmail: {
           msg: "Email address must be valid"
         }
@@ -37,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: {
+        min: {
           args: 3
         }
       }
