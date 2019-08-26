@@ -58,6 +58,7 @@ const PostController = () => {
         },
         returning: true,
       }).then(function([rowsUpdate, [updatedPost]]) {
+        console.log("Updated rows: " + rowsUpdate);
         return res.status(200).json(updatedPost)
       });
     } catch (err) {

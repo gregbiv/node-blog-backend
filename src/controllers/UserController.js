@@ -11,8 +11,8 @@ const UserController = () => {
    * @operationId loginUser
    * @group User - User endpoints
    * @param {User.model} post.body.required - the new user
-   * @returns {ErrorResponse.model} 400 - validation failed
-   * @returns 201 - User successfully register
+   * @returns {ErrorResponse.model} 401 - password invalid
+   * @returns 200 - User successfully logged-in
    */
   const login = async (req, res) => {
     const loginError = new ValidationError('password', 'password is not valid');
