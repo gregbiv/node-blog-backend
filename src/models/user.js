@@ -1,4 +1,6 @@
 'use strict';
+const bcrypt = require('bcrypt');
+
 module.exports = (sequelize, DataTypes) => {
   /**
    * @typedef User
@@ -13,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
       validate: {
+        isAlpha: true,
         len: {
           args: 3,
           msg: "Name must be at least 3 characters in length"
@@ -24,10 +27,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
       validate: {
-        len: {
-          args: [6, 128],
-          msg: "Email address must be between 6 and 128 characters in length"
-        },
         isEmail: {
           msg: "Email address must be valid"
         }
@@ -37,12 +36,25 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: {
+        min: {
           args: 3
         }
       }
     },
     roleId: DataTypes.INTEGER
-  }, {});
+  },
+  {
+    hooks: {
+      beforeCreate: (user) => {
+        const salt = bcrypt.genSaltSync();
+        user.password = bcrypt.hashSync(user.password, salt);
+      }
+    }
+  });
+
+  User.prototype.validPassword = function(password) {
+    return bcrypt.compareSync(password, this.password);
+  };
+
   return User;
 };

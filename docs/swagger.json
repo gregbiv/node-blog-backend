@@ -1,0 +1,366 @@
+{
+  "info": {
+    "title": "Node.js blog backend",
+    "version": "0.0.1",
+    "description": "Node.js simple app",
+    "contact": {
+      "email": "gregbiv@gmail.com"
+    }
+  },
+  "host": "localhost",
+  "basePath": "/",
+  "produces": [
+    "application/json",
+    "application/xml"
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "JWT": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": ""
+    }
+  },
+  "swagger": "2.0",
+  "paths": {
+    "/posts": {
+      "post": {
+        "parameters": [
+          {
+            "name": "post",
+            "in": "body",
+            "description": "the new post",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          }
+        ],
+        "description": "\nCreates a Post",
+        "tags": [
+          "Post"
+        ],
+        "responses": {
+          "201": {
+            "description": "Post successfully created"
+          },
+          "400": {
+            "description": "validation failed",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "operationId": "createPost"
+      },
+      "patch": {
+        "parameters": [
+          {
+            "name": "post",
+            "in": "body",
+            "description": "the new post",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          }
+        ],
+        "description": "\nUpdates a Post",
+        "tags": [
+          "Post"
+        ],
+        "responses": {
+          "200": {
+            "description": "Post successfully created",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "400": {
+            "description": "validation failed",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "operationId": "patchUpdate"
+      },
+      "get": {
+        "parameters": [
+          {
+            "name": "perPage",
+            "in": "query",
+            "description": "limit results per page",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "current page",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "description": "order by",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "description": "\nReturns all available posts",
+        "tags": [
+          "Post"
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of user info",
+            "schema": {
+              "$ref": "#/definitions/PostResponse"
+            }
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        },
+        "operationId": "getPost"
+      }
+    },
+    "/posts/{id}": {
+      "delete": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id, eg:123",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "description": "\nRemoves post by given ID",
+        "tags": [
+          "Post"
+        ],
+        "responses": {
+          "202": {
+            "description": "Post successfully removed"
+          },
+          "500": {
+            "description": "Unexpected error"
+          }
+        },
+        "operationId": "removePost"
+      }
+    },
+    "/login": {
+      "post": {
+        "parameters": [
+          {
+            "name": "post",
+            "in": "body",
+            "description": "the new user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "description": "\nCreates an User",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully logged",
+            "schema": {
+              "$ref": "#/definitions/LoginResponse"
+            }
+          },
+          "401": {
+            "description": "password invalid",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "operationId": "loginUser"
+      }
+    },
+    "/register": {
+      "post": {
+        "parameters": [
+          {
+            "name": "post",
+            "in": "body",
+            "description": "the new user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "description": "\nCreates an User",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "201": {
+            "description": "User successfully register"
+          },
+          "400": {
+            "description": "validation failed",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "operationId": "registerUser"
+      }
+    }
+  },
+  "definitions": {
+    "Post": {
+      "required": [
+        "title",
+        "description",
+        "userId",
+        "tags"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": ""
+        },
+        "description": {
+          "type": "string",
+          "description": ""
+        },
+        "userId": {
+          "type": "integer",
+          "description": ""
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "User": {
+      "required": [
+        "name",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": ""
+        },
+        "email": {
+          "type": "string",
+          "description": ""
+        },
+        "password": {
+          "type": "string",
+          "description": ""
+        },
+        "roleId": {
+          "type": "integer",
+          "description": ""
+        }
+      }
+    },
+    "ValidationError": {
+      "required": [
+        "field",
+        "message"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": ""
+        },
+        "message": {
+          "type": "string",
+          "description": ""
+        }
+      }
+    },
+    "ErrorResponse": {
+      "required": [
+        "errors"
+      ],
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationError"
+          }
+        }
+      }
+    },
+    "PostResponse": {
+      "required": [
+        "take",
+        "skip",
+        "count",
+        "total",
+        "items"
+      ],
+      "properties": {
+        "take": {
+          "type": "integer",
+          "description": ""
+        },
+        "skip": {
+          "type": "integer",
+          "description": ""
+        },
+        "count": {
+          "type": "integer",
+          "description": ""
+        },
+        "total": {
+          "type": "integer",
+          "description": ""
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Post"
+          }
+        }
+      }
+    },
+    "LoginResponse": {
+      "required": [
+        "token"
+      ],
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": ""
+        }
+      }
+    }
+  },
+  "responses": {},
+  "parameters": {},
+  "tags": [
+    {
+      "name": "Post",
+      "description": "Post endpoints"
+    },
+    {
+      "name": "User",
+      "description": "User endpoints"
+    }
+  ]
+}

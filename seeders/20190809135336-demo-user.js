@@ -11,6 +11,7 @@ module.exports = {
     return queryInterface.bulkInsert('Users', [{
       name: 'Gregory',
       email: 'gregbiv@gmail.com',
+      password: 123,
       roleId: roleId,
       createdAt: new Date(),
       updatedAt: new Date(),

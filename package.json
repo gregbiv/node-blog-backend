@@ -18,12 +18,16 @@
   "homepage": "https://github.com/gregbiv/node-blog/my_package",
   "scripts": {
     "start": "node ./bin/www",
-    "start.dev": "nodemon -L",
+    "start.dev": "nodemon -L --ignore 'test/*' --ignore 'features/*'",
     "lint": "eslint \"./**/*.js\"",
     "build": "",
-    "test": "mocha \"./test/**/*.js\""
+    "test-unit": "mocha \"./test/**/*.js\"",
+    "test-coverage": "istanbul cover node_modules/mocha/bin/_mocha ./test/**/*.js -- -R spec",
+    "test-integration": "cucumber-js",
+    "codeclimate-coverage": "codeclimate-test-reporter < ./coverage/lcov.info"
   },
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "express": "~4.16.1",
@@ -38,7 +42,9 @@
     "sequelize-paginate": "^1.1.6"
   },
   "devDependencies": {
+    "apickli": "^2.3.3",
     "chai": "^4.2.0",
+    "cucumber": "^5.1.0",
     "eslint": "^6.1.0",
     "mocha": "^6.2.0",
     "nodemon": "^1.19.1",

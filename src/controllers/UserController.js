@@ -1,8 +1,47 @@
 const models = require('../models');
 const { ValidationError, ErrorResponse } = require('../response/error');
+const LoginResponse = require('../response/token');
 const Sequelize = require('sequelize');
+const jwt = require('jsonwebtoken');
+const jwtSecret = process.env.JWT_SECRET;
 
 const UserController = () => {
+  /**
+   * Creates an User
+   * @route POST /login
+   * @operationId loginUser
+   * @group User - User endpoints
+   * @param {User.model} post.body.required - the new user
+   * @returns {ErrorResponse.model} 401 - password invalid
+   * @returns {LoginResponse.model} 200 - User successfully logged-in
+   */
+  const login = async (req, res) => {
+    const errors = [new ValidationError('password', 'password is not valid')];
+    const {email, password} = req.body;
+
+    try {
+      const user = await models.User.findOne({where: {email: email}});
+
+      if (user && user.validPassword(password)) {
+        const userData = {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          roleId: user.roleId,
+        };
+
+        const jwtToken = jwt.sign(userData, jwtSecret, {expiresIn: 60 * 60});
+        return res.status(200).json(new LoginResponse(jwtToken));
+      } else {
+        return res.status(401).json(new ErrorResponse(errors));
+
+      }
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ msg: 'Internal server error' });
+    }
+  };
+
   /**
    * Creates an User
    * @route POST /register
@@ -30,11 +69,13 @@ const UserController = () => {
         return res.status(400).json(new ErrorResponse(errors));
       }
 
+      console.log(err);
       return res.status(500).json({ msg: 'Internal server error' });
     }
   };
 
   return {
+    login,
     register,
   };
 };
